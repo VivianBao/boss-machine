@@ -87,8 +87,13 @@ apiRouter.get('meetings',() => {
   res.send(all)
 })
 apiRouter.post('meetings',()=> {
-
+  const newMeeting = createMeeting();
+  addToDatabase('ideas', newMeeting);
+  res.status(201).send(newMeeting);
 })
-apiRouter.delete('meetings',)
+apiRouter.delete('meetings', (req, res,) => {
+  deleteAllFromDatabase('meetings');
+  res.status(204).send();
+})
 
 module.exports = apiRouter;
