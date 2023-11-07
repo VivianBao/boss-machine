@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const path = require('path')
 const bodyParser = require("body-parser")
 const cors = require('cors')
 
@@ -16,6 +17,9 @@ app.use(cors())
 // Add middware for parsing request bodies here:
 app.use(bodyParser.json());
 
+// app.use('/', (req, res)=> {
+//   res.sendFile(path.join(__dirname, './index.html'));
+// })
 // Mount your existing apiRouter below at the '/api' path.
 const apiRouter = require('./server/api');
 app.use('/api', apiRouter)
