@@ -5,6 +5,7 @@ const {
   createMeeting,
   getAllFromDatabase,
   getFromDatabaseById,
+  getWorkArrByMinionId,
   addToDatabase,
   updateInstanceInDatabase,
   deleteFromDatabasebyId,
@@ -16,7 +17,6 @@ const checkMillionDollarIdea = require('./checkMillionDollarIdea.js')
 // validate if minion exists (by id)
 apiRouter.param('minionId', (req, res, next, id) => {
   const target = getFromDatabaseById('minions', id);
-  console.log("middleware minion passed")
   if(target){
     req.minion = target;
     next();
@@ -44,6 +44,45 @@ apiRouter.put('/minions/:minionId',(req, res, next)=> {
 })
 apiRouter.delete('/minions/:minionId',(req, res,) => {
   const targetMinion = deleteFromDatabasebyId('minions', req.params.minionId);
+  if(targetMinion){
+    res.status(204).send();
+  }
+})
+
+// validate if minion exists (by id)
+apiRouter.param('workId', (req, res, next, id) => {
+  const target = getFromDatabaseById('work', id);
+  if(target){
+    req.work = target;
+    next();
+  }else{
+    return res.status(404).send('Work not found');
+  }
+})
+
+// work
+apiRouter.get('/minions/:minionId/work',(req, res, next)=> {
+  // get works belong to minion
+  const minionId = req.minion.id;
+  const works = getWorkArrByMinionId('work', minionId)
+  if(works){
+    res.send(works)
+  }
+})
+
+apiRouter.post('/minions/:minionId/work',(req, res, next)=> {
+  req.body.hours = Number(req.body.hours)
+  const newWork = addToDatabase('work', req.body);
+  res.status(201).send(newWork);
+})
+
+apiRouter.put('/minions/:minionId/work/:workId',(req, res, next)=> {
+  const newWork = updateInstanceInDatabase('work', req.body);
+  res.send(newWork);
+})
+
+apiRouter.delete('/minions/:minionId/work/:workId',(req, res,) => {
+  const targetMinion = deleteFromDatabasebyId('work', req.params.workId);
   if(targetMinion){
     res.status(204).send();
   }
