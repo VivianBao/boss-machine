@@ -10,6 +10,7 @@ const {
   deleteFromDatabasebyId,
   deleteAllFromDatabase,
 } = require('./db.js');
+const checkMillionDollarIdea = require('./checkMillionDollarIdea.js')
 
 
 // validate if minion exists (by id)
@@ -64,7 +65,7 @@ apiRouter.get('/ideas',(req, res, next) => {
   const all = getAllFromDatabase('ideas');
   res.send(all)
 })
-apiRouter.post('/ideas',(req, res, next)=> {
+apiRouter.post('/ideas',checkMillionDollarIdea, (req, res, next)=> {
   req.body.numWeeks = Number(req.body.numWeeks)
   req.body.weeklyRevenue = Number(req.body.weeklyRevenue);
   const newIdea = addToDatabase('ideas', req.body);
@@ -73,7 +74,7 @@ apiRouter.post('/ideas',(req, res, next)=> {
 apiRouter.get('/ideas/:ideaId', (req, res, next)=> {
   res.send(req.idea);
 })
-apiRouter.put('/ideas/:ideaId', (req, res, next)=> {
+apiRouter.put('/ideas/:ideaId', checkMillionDollarIdea, (req, res, next)=> {
   const newIdea = updateInstanceInDatabase('ideas', req.body);
   res.send(newIdea);
 })
