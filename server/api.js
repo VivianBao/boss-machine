@@ -62,7 +62,6 @@ apiRouter.param('workId', (req, res, next, id) => {
 
 // work
 apiRouter.get('/minions/:minionId/work',(req, res, next)=> {
-  // get works belong to minion
   const minionId = req.minion.id;
   const works = getWorkArrByMinionId('work', minionId)
   if(works){
@@ -77,6 +76,9 @@ apiRouter.post('/minions/:minionId/work',(req, res, next)=> {
 })
 
 apiRouter.put('/minions/:minionId/work/:workId',(req, res, next)=> {
+  if(req.body.minionId !== req.params.minionId){
+    res.status(400)
+  }
   const newWork = updateInstanceInDatabase('work', req.body);
   res.send(newWork);
 })
